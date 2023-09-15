@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Welcome ";
+}
+
+<h3>@ViewData["Title"] @ViewBag.Email</h3>
+
+@if (!String.IsNullOrEmpty(ViewBag.Email as string))
+{
+    <p>Email: @ViewBag.Email</p>
+}
+else
+{
+    <p>Email not provided.</p>
+}
