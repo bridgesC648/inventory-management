@@ -4,6 +4,6 @@ namespace InventoryManagementSystem.ResponseDtos
 {
     public class GetInventoryByIdDto: Response
     {
-        public InventoryItem Item { get; set; }
+        public InventoryItem? Item { get; set; }
     }
 }

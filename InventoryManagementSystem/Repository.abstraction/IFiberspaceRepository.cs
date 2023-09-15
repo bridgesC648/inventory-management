@@ -6,9 +6,9 @@ namespace InventoryManagementSystem.Repository.abstraction
     public interface IFiberspaceRepository
     {
         Task<GetAllInventoryDto> GetAllInventory();
-        Task<GetInventoryByIdDto> GetInventoryById(int id);
+        Task<GetInventoryByIdDto> GetInventoryById(Guid id);
+        Task<GetAllInventoryDto> SearchInventoryItem(InventoryItem item);
         Task<GetUserDto> GetUser(int id);
-        
 
     }
 }
