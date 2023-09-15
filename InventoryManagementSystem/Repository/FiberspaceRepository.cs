@@ -86,6 +86,7 @@ namespace InventoryManagementSystem.Repository
             catch(Exception e)
             {
                 result.Success=false;
+                result.Message = e.Message;
             }
             return result;
         }
