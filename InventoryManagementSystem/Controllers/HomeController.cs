@@ -1,4 +1,5 @@
 ﻿using InventoryManagementSystem.Models;
+using InventoryManagementSystem.Repository.abstraction;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,14 +8,17 @@ namespace InventoryManagementSystem.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IFiberspaceRepository _repository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IFiberspaceRepository repository)
         {
             _logger = logger;
+            _repository = repository;
         }
 
         public IActionResult Index()
         {
+            var inventory = _repository.GetAllInventory();
             return View();
         }
 

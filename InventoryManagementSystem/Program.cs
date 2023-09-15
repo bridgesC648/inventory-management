@@ -1,8 +1,25 @@
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+using InventoryManagementSystem.Database;
+using InventoryManagementSystem.Repository;
+using InventoryManagementSystem.Repository.abstraction;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+/*IMvcBuilder mvcBuilder = builder.Services.AddControllersWithViews(options =>
+{
 
+});*/
+builder.Services.AddDbContext<FiberspaceContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
+builder.Services.AddScoped<IFiberspaceRepository, FiberspaceRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
