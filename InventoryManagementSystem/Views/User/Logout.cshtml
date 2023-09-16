@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Logout";
+}
+
+<link rel="stylesheet" href="~/css/login.css">
+
+<div class="container-login">
+    <div class="checkmark">
+        ✓
+    </div>
+    <div class="confirmation-message">
+        You have successfully logged out
+    </div>
+    <form method="post" asp-controller="Home" asp-action="Index">
+        <input type="submit" value="Back to Home">
+    </form>
+</div>

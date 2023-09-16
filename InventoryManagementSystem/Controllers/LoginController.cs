@@ -16,9 +16,32 @@ namespace InventoryManagementSystem.Controllers
             _repository = repository;
         }
 
+        [HttpGet]
         public IActionResult UserLogin()
         {
-            ViewBag.Email = TempData["Email"];
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UserLogin(string username, string password)
+        {
+            var userResult = await _repository.GetUserByUsernameOrEmail(username);
+            if (userResult.Success && userResult.user != null)
+            {
+                if (userResult.user.Password == password)
+                {
+                    HttpContext.Session.SetString("Username", userResult.user.Username);
+                    return RedirectToAction("Index", "User", new { username = userResult.user.Username });
+                }
+            }
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            return View();
+        }
+
+
+        public IActionResult Index(string username)
+        {
+            ViewBag.Username = username;
             return View();
         }
 

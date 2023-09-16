@@ -51,6 +51,22 @@ namespace InventoryManagementSystem.Repository
             throw new NotImplementedException();
         }
 
+        public async Task<GetUserDto> GetUserByUsernameOrEmail(string usernameOrEmail)
+        {
+            GetUserDto result = new();
+            try
+            {
+                result.user = _context.Users.FirstOrDefault(u => u.Username == usernameOrEmail || u.Email == usernameOrEmail);
+                result.Success = result.user != null;
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
         public async Task<GetAllInventoryDto> SearchInventoryItem(InventoryItem item)
         {
             GetAllInventoryDto result = new();

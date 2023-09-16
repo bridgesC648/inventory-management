@@ -16,9 +16,22 @@ namespace InventoryManagementSystem.Controllers
             _repository = repository;
         }
 
-        public IActionResult Index(string email)
+        public IActionResult Index()
         {
-            ViewBag.Email = email;
+            var username = HttpContext.Session.GetString("Username");
+            if (username == null)
+            {
+                return RedirectToAction("UserLogin", "Login");
+            }
+
+            ViewBag.Username = username;
+            return View();
+        }
+
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
             return View();
         }
 

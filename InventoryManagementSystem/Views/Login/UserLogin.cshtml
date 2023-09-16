@@ -8,8 +8,8 @@
     <h3>@ViewData["Title"]</h3>
 
     <form method="post">
-        <input type="text" name="username" placeholder="Username or Email" value="@ViewBag.Email"><br>
-        <input type="password" name="password" placeholder="Password"><br><br>
+        <input type="text" name="username" placeholder="Username or Email" value="@ViewBag.Email">
+        <input type="password" name="password" placeholder="Password">
         <input type="submit" value="Login">
     </form>
     <a asp-controller="Login" asp-action="ForgotPassword">Forgot Password?</a>
