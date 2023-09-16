@@ -2,13 +2,13 @@
     ViewData["Title"] = "Welcome ";
 }
 
-<h3>@ViewData["Title"] @ViewBag.Email</h3>
+<h3>@ViewData["Title"] @ViewBag.Username</h3>
 
-@if (!String.IsNullOrEmpty(ViewBag.Email as string))
+@if (!String.IsNullOrEmpty(ViewBag.Username as string))
 {
-    <p>Email: @ViewBag.Email</p>
+    <p>Username: @ViewBag.Username</p>
 }
 else
 {
-    <p>Email not provided.</p>
+    <p>Username not provided.</p>
 }
