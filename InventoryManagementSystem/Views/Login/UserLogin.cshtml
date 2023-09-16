@@ -2,22 +2,15 @@
     ViewData["Title"] = "User Login";
 }
 
-<center>
-    <h3>@ViewData["Title"]</h3>
-</center>
+<link rel="stylesheet" href="~/css/login.css">
 
-<center>
-    <form>
-        <input type="text" name="username" placeholder="Username or Email" value="@ViewBag.Email"><br><br>
+<div class="container-login">
+    <h3>@ViewData["Title"]</h3>
+
+    <form method="post">
+        <input type="text" name="username" placeholder="Username or Email" value="@ViewBag.Email"><br>
         <input type="password" name="password" placeholder="Password"><br><br>
         <input type="submit" value="Login">
     </form>
     <a asp-controller="Login" asp-action="ForgotPassword">Forgot Password?</a>
-</center>
-
-@functions{
-    private string GetEmailValue()
-    {
-        return ViewBag.Email != null ? ViewBag.Email.ToString() : string.Empty;
-    }
-}
+</div>

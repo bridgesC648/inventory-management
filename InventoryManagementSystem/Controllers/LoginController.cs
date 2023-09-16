@@ -16,9 +16,9 @@ namespace InventoryManagementSystem.Controllers
             _repository = repository;
         }
 
-        public IActionResult UserLogin(string email)
+        public IActionResult UserLogin()
         {
-            ViewBag.Email = email;
+            ViewBag.Email = TempData["Email"];
             return View();
         }
 
@@ -30,7 +30,14 @@ namespace InventoryManagementSystem.Controllers
         [HttpPost]
         public IActionResult ForgotPassword(string email)
         {
-            return RedirectToAction("UserLogin", "Login", new { email = email });
+            TempData["Email"] = email;
+            return RedirectToAction("EmailSent", new { email = email });
+        }
+
+        public IActionResult EmailSent(string email)
+        {
+            TempData["Email"] = email;
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
