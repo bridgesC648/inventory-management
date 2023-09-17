@@ -19,6 +19,7 @@ public partial class FiberspaceContext : DbContext
     public virtual DbSet<InventoryItem> InventoryItems { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<Location> Locations { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -53,6 +54,26 @@ public partial class FiberspaceContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("PrimaryUOM");
+        });
+
+        modelBuilder.Entity<Location>(entity =>
+        {
+            entity.HasKey(e => e.LocationId).HasName("PK__Location__E7FEA497518AB304");
+            entity.ToTable("Location");
+            entity.Property(e => e.LocationId)
+                .HasColumnName("LocationId")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.LocationName)
+                .IsRequired()
+                .HasMaxLength(20);
+
+            entity.Property(e => e.Active);
+
+            entity.Property(e => e.ItemType)
+                .IsRequired()
+                .HasMaxLength(20);
+              
         });
 
         modelBuilder.Entity<User>(entity =>
