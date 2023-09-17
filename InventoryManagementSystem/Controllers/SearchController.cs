@@ -2,9 +2,12 @@
 using InventoryManagementSystem.Models.Search;
 using InventoryManagementSystem.Repository.abstraction;
 using InventoryManagementSystem.Database.Entities;
+using System.Net.NetworkInformation;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryManagementSystem.Controllers
 {
+    // [Authorize]
     public class SearchController : Controller
     {
         private readonly IFiberspaceRepository _repository;
