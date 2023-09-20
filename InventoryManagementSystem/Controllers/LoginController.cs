@@ -2,6 +2,8 @@
 using InventoryManagementSystem.Repository.abstraction;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Net;
+using System.Net.Mail;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -14,6 +16,12 @@ namespace InventoryManagementSystem.Controllers
         {
             _logger = logger;
             _repository = repository;
+        }
+
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return RedirectToAction("UserLogin", "Login");
         }
 
         [HttpGet]
@@ -53,8 +61,27 @@ namespace InventoryManagementSystem.Controllers
         [HttpPost]
         public IActionResult ForgotPassword(string email)
         {
-            TempData["Email"] = email;
-            return RedirectToAction("EmailSent", new { email = email });
+                var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential("briangomezsre@gmail.com", "xcxsfronmifljpbx"),
+                    EnableSsl = true,
+                };
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress("briangomezsre@gmail.com"),
+                    Subject = "Reset Your Password",
+                    Body = "<p>Click the link below to reset your password</p><p><a href='https://google.com" + "'>Reset Password</a></p>",
+                    IsBodyHtml = true,
+                };
+
+                mailMessage.To.Add(email);
+
+                smtpClient.Send(mailMessage);
+
+                TempData["Email"] = email;
+                return RedirectToAction("EmailSent", new { email = email });
         }
 
         public IActionResult EmailSent(string email)
