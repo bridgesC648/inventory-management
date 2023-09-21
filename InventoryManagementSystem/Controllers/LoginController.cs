@@ -31,7 +31,7 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UserLogin(string username, string password)
+        public async Task<IActionResult> UserLogin(string username, string password, string selectedItemType)
         {
             var userResult = await _repository.GetUserByUsernameOrEmail(username);
             if (userResult.Success && userResult.user != null)
@@ -39,6 +39,7 @@ namespace InventoryManagementSystem.Controllers
                 if (userResult.user.Password == password)
                 {
                     HttpContext.Session.SetString("Username", userResult.user.Username);
+                    HttpContext.Session.SetString("SelectedItemType", selectedItemType);
                     return RedirectToAction("Index", "User", new { username = userResult.user.Username });
                 }
             }
