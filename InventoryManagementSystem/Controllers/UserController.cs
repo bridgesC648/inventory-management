@@ -19,12 +19,15 @@ namespace InventoryManagementSystem.Controllers
         public IActionResult Index()
         {
             var username = HttpContext.Session.GetString("Username");
+            string selectedItemType = HttpContext.Session.GetString("SelectedItemType")!;
+
             if (username == null)
             {
                 return RedirectToAction("UserLogin", "Login");
             }
 
             ViewBag.Username = username;
+            ViewBag.SelectedItemType = selectedItemType;
             return View();
         }
 
