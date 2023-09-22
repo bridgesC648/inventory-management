@@ -9,6 +9,8 @@ using InventoryManagementSystem.Repository;
 using InventoryManagementSystem.Repository.abstraction;
 using Microsoft.AspNetCore.Identity;
 using InventoryManagementSystem.Database.Entities;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using InventoryManagementSystem.Areas.Identity.Pages.Account;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,10 +38,12 @@ builder.Services.AddDbContext<FiberspaceContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<FiberspaceContext>();
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<FiberspaceContext>()
+    .AddDefaultTokenProviders();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IFiberspaceRepository, FiberspaceRepository>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

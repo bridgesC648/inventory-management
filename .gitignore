@@ -362,3 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /InventoryManagementSystem/Properties/ServiceDependencies/InventoryManagementSystemProjGroup6 - Web Deploy
+/InventoryManagementSystem/Models/Search/SearchModel.cs
+/InventoryManagementSystem/Views/Search/Index.cshtml
