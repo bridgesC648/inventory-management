@@ -2,6 +2,8 @@
 using InventoryManagementSystem.Repository.abstraction;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Net;
+using System.Net.Mail;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -17,13 +19,19 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [HttpGet]
+        public IActionResult Index()
+        {
+            return RedirectToAction("UserLogin", "Login");
+        }
+
+        [HttpGet]
         public IActionResult UserLogin()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> UserLogin(string username, string password)
+        public async Task<IActionResult> UserLogin(string username, string password, string selectedItemType)
         {
             var userResult = await _repository.GetUserByUsernameOrEmail(username);
             if (userResult.Success && userResult.user != null)
@@ -31,6 +39,7 @@ namespace InventoryManagementSystem.Controllers
                 if (userResult.user.Password == password)
                 {
                     HttpContext.Session.SetString("Username", userResult.user.Username);
+                    HttpContext.Session.SetString("SelectedItemType", selectedItemType);
                     return RedirectToAction("Index", "User", new { username = userResult.user.Username });
                 }
             }
@@ -53,8 +62,27 @@ namespace InventoryManagementSystem.Controllers
         [HttpPost]
         public IActionResult ForgotPassword(string email)
         {
-            TempData["Email"] = email;
-            return RedirectToAction("EmailSent", new { email = email });
+                var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential("briangomezsre@gmail.com", "xcxsfronmifljpbx"),
+                    EnableSsl = true,
+                };
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress("briangomezsre@gmail.com"),
+                    Subject = "Reset Your Password",
+                    Body = "<p>Click the link below to reset your password</p><p><a href='https://google.com" + "'>Reset Password</a></p>",
+                    IsBodyHtml = true,
+                };
+
+                mailMessage.To.Add(email);
+
+                smtpClient.Send(mailMessage);
+
+                TempData["Email"] = email;
+                return RedirectToAction("EmailSent", new { email = email });
         }
 
         public IActionResult EmailSent(string email)

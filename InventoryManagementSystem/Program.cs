@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Http;
 using InventoryManagementSystem.Database;
 using InventoryManagementSystem.Repository;
 using InventoryManagementSystem.Repository.abstraction;
-
+using Microsoft.AspNetCore.Identity;
+using InventoryManagementSystem.Database.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,11 +24,21 @@ builder.Services.AddSession(options => {
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.Name = "AspNetCore.Identity.Application";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+    options.SlidingExpiration = true;
+});
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
 builder.Services.AddDbContext<FiberspaceContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<FiberspaceContext>();
+builder.Services.AddRazorPages();
 builder.Services.AddScoped<IFiberspaceRepository, FiberspaceRepository>();
 var app = builder.Build();
 
@@ -44,11 +55,13 @@ app.UseStaticFiles();
 app.UseSession();
 
 app.UseRouting();
+app.UseAuthentication();;
 
 app.UseAuthorization();
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Login}/{action=UserLogin}/{id?}");
 
 app.Run();
