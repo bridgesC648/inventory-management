@@ -3,6 +3,7 @@ using InventoryManagementSystem.Database;
 using InventoryManagementSystem.Repository.abstraction;
 using InventoryManagementSystem.ResponseDtos;
 using LinqKit;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagementSystem.Repository
 {
@@ -66,6 +67,7 @@ namespace InventoryManagementSystem.Repository
             }
             return result;
         }
+
 
         public async Task<GetAllInventoryDto> SearchInventoryItem(InventoryItem item)
         {

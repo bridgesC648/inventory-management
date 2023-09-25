@@ -20,4 +20,5 @@ public partial class InventoryItem
     public decimal PrimaryQuantity { get; set; }
 
     public string PrimaryUom { get; set; } = null!;
+
 }
