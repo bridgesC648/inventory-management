@@ -20,7 +20,7 @@ namespace InventoryManagementSystem.Repository
             result.InventoryList = new();
             try
             {
-                
+                var test = _context.Locations.ToList();
                 result.InventoryList = _context.InventoryItems.ToList();
                 result.Success = true;
             }
