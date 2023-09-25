@@ -22,7 +22,7 @@ namespace InventoryManagementSystem.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return RedirectToAction("UserLogin", "Login");
+            return RedirectToAction("index", "Home");
         }
 
         [HttpGet]

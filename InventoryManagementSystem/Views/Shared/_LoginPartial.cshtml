@@ -17,14 +17,12 @@
         </form>
     </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="Index">Search</a>
+            <a class="nav-link text-dark" id="authuser" asp-area="Identity" asp-page="/Account/AuthUser">Search</a>
         </li>
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
+    
     <li class="nav-item">
         <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
     </li>
