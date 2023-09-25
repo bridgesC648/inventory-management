@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Mail;
+using InventoryManagementSystem.Areas.Identity.Pages.Account;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -27,7 +28,8 @@ namespace InventoryManagementSystem.Controllers
         [HttpGet]
         public IActionResult UserLogin()
         {
-            return View();
+
+            return Redirect("/Identity/Account/Login");
         }
 
         [HttpPost]

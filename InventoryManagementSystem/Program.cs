@@ -29,6 +29,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.Name = "AspNetCore.Identity.Application";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
     options.SlidingExpiration = true;
+    options.LoginPath = "/Identity/Account/Login";
 });
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
@@ -55,6 +56,7 @@ app.UseStaticFiles();
 app.UseSession();
 
 app.UseRouting();
+
 app.UseAuthentication();;
 
 app.UseAuthorization();
