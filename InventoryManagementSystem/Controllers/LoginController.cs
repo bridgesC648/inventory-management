@@ -29,7 +29,7 @@ namespace InventoryManagementSystem.Controllers
         public IActionResult UserLogin()
         {
 
-            return Redirect("/Identity/Account/Login");
+            return View();
         }
 
         [HttpPost]

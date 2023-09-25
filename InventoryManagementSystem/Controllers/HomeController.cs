@@ -21,6 +21,12 @@ namespace InventoryManagementSystem.Controllers
             var inventory = _repository.GetAllInventory();
             return View();
         }
+        [HttpGet]
+        public IActionResult UserLogin()
+        {
+
+            return Redirect("/Identity/Account/Login");
+        }
 
         public IActionResult Privacy()
         {
