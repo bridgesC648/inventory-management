@@ -11,5 +11,6 @@ namespace InventoryManagementSystem.Repository.abstraction
         Task<GetUserDto> GetUser(int id);
         Task<GetUserDto> GetUserByUsernameOrEmail(string usernameOrEmail);
 
+
     }
 }

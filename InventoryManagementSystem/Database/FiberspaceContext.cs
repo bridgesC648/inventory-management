@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using InventoryManagementSystem.Database.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagementSystem.Database;
 
-public partial class FiberspaceContext : DbContext
+public partial class FiberspaceContext : IdentityDbContext<IdentityUser>
 {
     public FiberspaceContext()
     {
@@ -26,6 +28,8 @@ public partial class FiberspaceContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<InventoryItem>(entity =>
         {
             entity.HasKey(e => e.InventoryItemId).HasName("PK__Inventor__3BB2AC80BFD08667");

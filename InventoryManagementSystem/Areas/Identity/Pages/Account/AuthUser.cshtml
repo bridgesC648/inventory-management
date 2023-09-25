@@ -1,0 +1,123 @@
+﻿@page
+@model AuthUserModel
+
+@{
+    ViewData["Title"] = "Authenticated User";
+}
+
+<div class="dashboard">
+    <center><h2>Dashboard</h2></center>
+    <div class="charts-container">
+        <div class="card">
+            <div class="card-title">In Inventory</div>
+            <div class="card-number">@Model.TotalInventoryCount</div>
+        </div>
+        <div class="card">
+            <div class="card-title">Location A</div>
+            <div class="card-number">56</div> <!-- Replace with actual number -->
+        </div>
+        <div class="card">
+            <div class="card-title">Updated Today</div>
+            <div class="card-number">34</div> <!-- Replace with actual number -->
+        </div>
+    </div>
+</div>
+
+
+
+<div class="auth-user-container">
+    <h1>FiberSpace</h1>
+
+    <div class="location-item-type">
+        <div class="location-display">
+            <label>Location:</label>
+            <span class="display-field">@Model.Location</span>
+        </div>
+        <div class="itemtype-display">
+            <label>Item Type:</label>
+            <span class="display-field">@Model.Item</span>
+        </div>
+    </div>
+
+    <div class="input-section">
+        <input type="text" id="locationField" placeholder="Enter a Location" />
+        <button id="setLocationBtn" disabled>SET</button>
+
+        <input type="text" id="itemField" placeholder="Scan an Item" />
+        <button id="addItemBtn">ADD</button>
+    </div>
+
+    <div class="display-box" id="itemsContainer">
+        <!-- Items will be dynamically added here -->
+    </div>
+
+    <div class="button-section">
+        <button id="processSessionBtn">Process Session</button>
+        <button id="resetBtn">Reset</button>
+        <button id="exitBtn">Exit</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#addItemBtn").click(function () {
+                let item = $("#itemField").val();
+                let location = $("#locationField").val();
+                if (item && location) {
+                    $("#itemsContainer").prepend(`<div class="item-card"><span class="delete-icon">&#128465;</span> ${item} - ${location}</div>`);
+                }
+            });
+
+            $("#itemsContainer").on("click", ".item-card", function (e) {
+                if ($(e.target).hasClass("delete-icon")) {
+                    $(this).remove();
+                    return;
+                }
+
+
+                $(this).toggleClass("selected-item");
+
+                let parts = $(this).text().split(" - ");
+                let itemName = parts[0].replace("🗑", "").trim();
+                let itemLocation = parts[1];
+
+                $(".location-display .display-field").text(itemLocation);
+                $(".itemtype-display .display-field").text(itemName);
+
+                $("#setLocationBtn").prop("disabled", !$(".selected-item").length);
+            });
+
+            $("#setLocationBtn").click(function () {
+                let newLocation = $("#locationField").val();
+                $(".selected-item").each(function () {
+                    let parts = $(this).text().split(" - ");
+                    let itemName = parts[0].replace("🗑", "").trim();
+                    $(this).html(`<span class="delete-icon">&#128465;</span> ${itemName} - ${newLocation}`);
+                });
+
+                $(".selected-item").removeClass("selected-item");
+                $("#setLocationBtn").prop("disabled", true);
+
+
+                $(".location-display .display-field").text(newLocation);
+            });
+
+
+            $("#locationField").on("input", function () {
+                if (!$(this).val()) {
+                    $("#addItemBtn").prop("disabled", true);
+                } else {
+                    $("#addItemBtn").prop("disabled", false);
+                }
+            });
+
+            $("#resetBtn").click(function () {
+
+                $("#itemsContainer").empty();
+            });
+
+            console.log("Total Inventory Count from Model:", @Model.TotalInventoryCount);
+
+        });</script>
+}
