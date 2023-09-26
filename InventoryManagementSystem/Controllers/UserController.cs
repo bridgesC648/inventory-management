@@ -1,18 +1,16 @@
 ﻿using InventoryManagementSystem.Models;
 using InventoryManagementSystem.Repository.abstraction;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace InventoryManagementSystem.Controllers
 {
-    [Authorize]
-    public class HomeController : Controller
+    public class UserController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<UserController> _logger;
         private readonly IFiberspaceRepository _repository;
 
-        public HomeController(ILogger<HomeController> logger, IFiberspaceRepository repository)
+        public UserController(ILogger<UserController> logger, IFiberspaceRepository repository)
         {
             _logger = logger;
             _repository = repository;
@@ -20,18 +18,23 @@ namespace InventoryManagementSystem.Controllers
 
         public IActionResult Index()
         {
-            //var inventory = _repository.GetAllInventory();
-            return Redirect("/Identity/Account/AuthUser");
-        }
-        [HttpGet]
-        public IActionResult UserLogin()
-        {
+            var username = HttpContext.Session.GetString("Username");
+            string selectedItemType = HttpContext.Session.GetString("SelectedItemType")!;
 
-            return Redirect("/Identity/Account/Login");
+            if (username == null)
+            {
+                return RedirectToAction("UserLogin", "Login");
+            }
+
+            ViewBag.Username = username;
+            ViewBag.SelectedItemType = selectedItemType;
+            return View();
         }
 
-        public IActionResult Privacy()
+
+        public IActionResult Logout()
         {
+            HttpContext.Session.Clear();
             return View();
         }
 

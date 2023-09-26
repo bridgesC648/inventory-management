@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Email Sent";
+}
+
+<link rel="stylesheet" href="~/css/login.css">
+
+<div class="container-login">
+    <h3>@ViewData["Title"]</h3>
+
+    <div class="confirmation-message">
+        <div class="checkmark">
+            ✓
+        </div>
+        A reset link has been sent to your email.
+    </div>
+    <form method="get" asp-controller="Login" asp-action="UserLogin" asp-route-email="@ViewBag.Email">
+        <input type="submit" value="Back to Login">
+    </form>
+</div>

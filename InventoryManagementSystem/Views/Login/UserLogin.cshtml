@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "User Login";
+}
+
+<link rel="stylesheet" href="~/css/login.css">
+
+<div class="container-login">
+    <h3>@ViewData["Title"]</h3>
+
+    <form method="post">
+        <input type="text" name="username" placeholder="Username or Email" value="@ViewBag.Email">
+        <input type="password" name="password" placeholder="Password">
+        <select id="ddlItemType" name="selectedItemType" required>
+            <option value="" disabled selected>Item Type</option>
+            <option value="yarn">Yarn</option>
+            <option value="carpet">Carpet</option>
+        </select>
+        <input type="submit" value="Login">
+    </form>
+    <a asp-controller="Login" asp-action="ForgotPassword">Forgot Password?</a>
+</div>

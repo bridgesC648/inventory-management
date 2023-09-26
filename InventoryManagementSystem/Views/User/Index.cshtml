@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Welcome ";
+}
+
+<h3>@ViewData["Title"] @ViewBag.Username</h3>
+
+@if (!String.IsNullOrEmpty(ViewBag.Username as string))
+{
+    <p>Username: @ViewBag.Username</p>
+}
+else
+{
+    <p>Username not provided.</p>
+}
+<h3>Selected Item Type:</h3>
+<p>@ViewBag.SelectedItemType</p>
