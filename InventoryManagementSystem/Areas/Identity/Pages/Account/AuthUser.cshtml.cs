@@ -11,7 +11,6 @@ namespace InventoryManagementSystem.Areas.Identity.Pages.Account
 {
     [Authorize] // Ensure only authenticated users can access this page
     public class AuthUserModel : PageModel
-
     {
 
         private readonly IFiberspaceRepository _repository;

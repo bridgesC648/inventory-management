@@ -18,7 +18,7 @@ namespace InventoryManagementSystem.Controllers
 
         public IActionResult Index()
         {
-            var inventory = _repository.GetAllInventory();
+            //var inventory = _repository.GetAllInventory();
             return View();
         }
         [HttpGet]

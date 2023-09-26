@@ -106,7 +106,6 @@ namespace InventoryManagementSystem.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("/Identity/Account/AuthUser");
 
-
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
