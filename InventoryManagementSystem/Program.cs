@@ -9,6 +9,7 @@ using InventoryManagementSystem.Repository;
 using InventoryManagementSystem.Repository.abstraction;
 using Microsoft.AspNetCore.Identity;
 using InventoryManagementSystem.Database.Entities;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,7 +40,12 @@ builder.Services.AddDbContext<FiberspaceContext>(options =>
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<FiberspaceContext>();
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+  {
+      options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "/Login");
+  }
+ 
+);
 builder.Services.AddScoped<IFiberspaceRepository, FiberspaceRepository>();
 var app = builder.Build();
 

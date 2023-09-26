@@ -20,8 +20,7 @@ namespace InventoryManagementSystem.Controllers
 
         public IActionResult Index()
         {
-            var inventory = _repository.GetAllInventory();
-            return View();
+            return Redirect("/Identity/Account/AuthUser");
         }
         [HttpGet]
         public IActionResult UserLogin()

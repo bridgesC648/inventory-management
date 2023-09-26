@@ -51,19 +51,7 @@ namespace InventoryManagementSystem.Migrations
 
             
 
-            migrationBuilder.CreateTable(
-                name: "Userss",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Userss", x => x.id);
-                });
+            
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
