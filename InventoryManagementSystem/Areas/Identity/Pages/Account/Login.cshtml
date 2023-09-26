@@ -2,7 +2,7 @@
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Login";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -10,7 +10,7 @@
     <div class="col-md-4">
         <section>
             <form id="account" method="post">
-                <h2>Use a local account to log in.</h2>
+             
                 <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-floating ">
@@ -46,9 +46,8 @@
                      <p>
                         <a id="forgot-password" class=" btn-danger w-100 btn btn-lg mt-1" asp-page="./ForgotPassword">Forgot your password?</a>
                     </p>
-                    <p>
-                        <a asp-page="./Register" class=" btn-success w-100 btn btn-lg mt-1" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    </p>
+                    
+                    
                 </div>
                 
             </form>
