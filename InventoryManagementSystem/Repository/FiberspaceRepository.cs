@@ -32,6 +32,24 @@ namespace InventoryManagementSystem.Repository
             return result;
         }
 
+        public async Task<GetAllInventoryDto> GetAllItemsAtLocation(string LocationName)
+        {
+
+            GetAllInventoryDto result = new GetAllInventoryDto();
+            result.InventoryList = new();
+            try
+            {
+                result.InventoryList = _context.InventoryItems.Where(i => i.LocationName == LocationName).ToList();
+                result.Success = true;
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+            }
+
+            return result;
+        }
+
         public async Task<GetInventoryByIdDto> GetInventoryById(Guid id)
         {
             GetInventoryByIdDto result = new();
@@ -44,6 +62,35 @@ namespace InventoryManagementSystem.Repository
             catch (Exception e)
             {
                 result.Message = e.Message;
+            }
+            return result;
+        }
+
+        public async Task<GetInventoryByIdDto> GetItem(string itemSerialNumber)
+        {
+            GetInventoryByIdDto result = new();
+            result.Item = new();
+            try
+            {
+                result.Item = _context.InventoryItems.Where(i => i.ItemSerialNumber.Trim() == itemSerialNumber.Trim()).FirstOrDefault();
+                result.Success = true;
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+            }
+            return result;
+        }
+
+        public async Task<Location> GetLocation(string locationName)
+        {
+            Location result = new();
+            try
+            {
+                result = _context.Locations.Where(l => l.LocationName.Trim() == locationName.Trim()).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
             }
             return result;
         }
@@ -69,6 +116,31 @@ namespace InventoryManagementSystem.Repository
             return result;
         }
 
+        public Task<GetUserDto> ProcessCycleSession()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<GetInventoryByIdDto> RelocateItem(InventoryItem item, string newLocationName)
+        {
+            GetInventoryByIdDto result = new();
+            try
+            {
+               var editItem = _context.InventoryItems.Where(i => i.InventoryItemId == item.InventoryItemId).FirstOrDefault();
+                if(editItem != null)
+                {
+                    editItem.LocationName = newLocationName;
+                    _context.InventoryItems.Update(editItem);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                result.Success = false;
+            }
+            return result;
+        }
 
         public async Task<GetAllInventoryDto> SearchInventoryItem(InventoryItem item)
         {
@@ -106,6 +178,27 @@ namespace InventoryManagementSystem.Repository
             {
                 result.Success=false;
                 result.Message = e.Message;
+            }
+            return result;
+        }
+
+        public async Task<GetInventoryByIdDto> UpdateItemStatusCode(InventoryItem item, string newStatusCode)
+        {
+            GetInventoryByIdDto result = new();
+            try
+            {
+                var editItem = _context.InventoryItems.Where(i => i.InventoryItemId == item.InventoryItemId).FirstOrDefault();
+                if (editItem != null)
+                {
+                    editItem.ItemStatusCode = newStatusCode;
+                    _context.InventoryItems.Update(editItem);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                result.Success = false;
             }
             return result;
         }
