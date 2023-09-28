@@ -13,9 +13,9 @@ namespace InventoryManagementSystem.Repository.abstraction
         Task<Location> GetLocation(string locationName);
         Task<GetInventoryByIdDto> GetItem(string itemSerialNumber);
         Task<GetInventoryByIdDto> RelocateItem(InventoryItem item, string newLocationName);
-        Task<GetInventoryByIdDto> UpdateItemStatusCode(InventoryItem item, String newStatusCode);
-        Task<GetUserDto> ProcessCycleSession();
-        Task<GetAllInventoryDto> GetAllItemsAtLocation(String LocationName);
+        Task<GetInventoryByIdDto> UpdateItemStatusCode(InventoryItem item, string newStatusCode);
+        Task<Response> ProcessCycleSession(List<CycleHistory> CycleItems);
+        Task<GetAllInventoryDto> GetAllItemsAtLocation(string LocationName);
 
        
 

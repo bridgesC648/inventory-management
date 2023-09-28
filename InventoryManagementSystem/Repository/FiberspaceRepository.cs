@@ -115,9 +115,34 @@ namespace InventoryManagementSystem.Repository
             }
             return result;
         }
-
-        public Task<GetUserDto> ProcessCycleSession()
+        //processCycleSession: Takes an array of items in the format of the CycleHistory table, and saves everything from the current session
+        public Task<Response> ProcessCycleSession(List<CycleHistory> CycleItems)
         {
+            Response result = new();
+            try
+            {
+                foreach(var cycleItem in CycleItems)
+                {
+                    CycleHistory insert = new()
+                    {
+                        ItemSerialNumber = cycleItem.ItemSerialNumber,
+                        ItemType = cycleItem.ItemType,
+                        Comment = cycleItem.Comment,
+                        Employee = cycleItem.Employee,
+                        FoundInd = cycleItem.FoundInd,
+                        LocationName = cycleItem.LocationName,
+                        RelocateInd = cycleItem.RelocateInd,
+                        CreateDateTime = DateTime.Now,
+                    };
+                    _context.Add(insert);
+                }
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                result.Success = false;
+                result.Message = e.Message;
+            }
             throw new NotImplementedException();
         }
 
