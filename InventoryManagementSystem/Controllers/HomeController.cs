@@ -35,6 +35,18 @@ namespace InventoryManagementSystem.Controllers
             return View();
         }
 
+        public IActionResult GetLocation(string Name)
+        {
+            var res = _repository.GetAllActiveLocations();
+            var filteredLoc = res.Result.Where(l => l.ItemType.Trim().ToLower() == Name.Trim().ToLower());
+            string selectOptions = "";
+            foreach (var location in filteredLoc)
+            {
+                selectOptions += $"<option value='{location.LocationName}'>{location.LocationName}</option>";
+            }
+            return Ok(new {selectOptions });
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

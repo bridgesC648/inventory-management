@@ -15,6 +15,21 @@ namespace InventoryManagementSystem.Repository
             _context = context;
         }
 
+        public async Task<List<Location>> GetAllActiveLocations()
+        {
+            List<Location> locations = new List<Location>();    
+            try
+            {
+                var res = _context.Locations.Where(l => l.Active).ToList();
+                locations = res;
+            }
+            catch(Exception e)
+            {
+
+            }
+            return locations;
+        }
+
         public async Task<GetAllInventoryDto> GetAllInventory()
         {
             GetAllInventoryDto result = new GetAllInventoryDto();

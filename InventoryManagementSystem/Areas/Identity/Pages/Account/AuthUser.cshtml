@@ -4,7 +4,33 @@
 @{
     ViewData["Title"] = "Authenticated User";
 }
+<script>
+    function SetItemType() { 
 
+        let selecItem = document.getElementById('itemField');
+        let name = selecItem.value;
+           $.ajax({
+            url: "/Home/GetLocation/",
+            method: "POST",
+            data: {
+                Name: name
+            },
+            success: function(data) {
+                $('#locationField').html(data.selectOptions)
+                selecItem.disabled = true;
+                $('#locationField').prop('disabled',false);
+                $('#setLocationBtn').prop('disabled',false);
+                $('#itemType').html(name);
+                console.log(data);
+            },
+        
+        });
+}
+function DisableLocation() {
+    $('#locationField').prop('disabled',true);
+}
+  
+</script>
 <div class="dashboard">
     <center><h2>Dashboard</h2></center>
     <div class="charts-container">
@@ -35,16 +61,22 @@
         </div>
         <div class="itemtype-display">
             <label>Item Type:</label>
-            <span class="display-field">@Model.Item</span>
+            <span class="display-field" id="itemType">@Model.Item</span>
         </div>
     </div>
 
     <div class="input-section">
-        <input type="text" id="locationField" placeholder="Enter a Location" />
-        <button id="setLocationBtn" disabled>SET</button>
+        <select style="width: 100px;" type="text" id="locationField" class="form-control" placeholder="Enter a Location" disabled>
+                
+            </select>
+        <button id="setLocationBtn" onclick="DisableLocation()" disabled>SET</button>
 
-        <input type="text" id="itemField" placeholder="Scan an Item" />
-        <button id="addItemBtn">ADD</button>
+        <select type="text" id="itemField" class="form-control" style="width: 100px;" placeholder="Scan an Item">
+            <option value="Carpet">Carpet</option>
+            <option value="YARN">Yarn</option>
+        </select>
+        <button onclick="SetItemType()">Set</button>
+        <button id="addItemBtn" onclick="SetItemType()">Add</button>
     </div>
 
     <div class="display-box" id="itemsContainer">
@@ -119,5 +151,7 @@
 
             console.log("Total Inventory Count from Model:", @Model.TotalInventoryCount);
 
-        });</script>
+        });
+
+        </script>
 }

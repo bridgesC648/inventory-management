@@ -16,6 +16,7 @@ namespace InventoryManagementSystem.Repository.abstraction
         Task<GetInventoryByIdDto> UpdateItemStatusCode(InventoryItem item, string newStatusCode);
         Task<Response> ProcessCycleSession(List<CycleHistory> CycleItems);
         Task<GetAllInventoryDto> GetAllItemsAtLocation(string LocationName);
+        Task<List<Location>> GetAllActiveLocations();
 
        
 

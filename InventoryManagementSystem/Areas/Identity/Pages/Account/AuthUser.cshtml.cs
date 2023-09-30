@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using InventoryManagementSystem.Database;
 using Microsoft.EntityFrameworkCore;
 using InventoryManagementSystem.Repository.abstraction;
+using InventoryManagementSystem.Database.Entities;
+
 
 
 namespace InventoryManagementSystem.Areas.Identity.Pages.Account
@@ -27,6 +29,11 @@ namespace InventoryManagementSystem.Areas.Identity.Pages.Account
         public List<string> Items { get; set; } = new List<string>();
         public int CurrentItemNumber { get; set; } = 1;
         public int TotalInventoryCount { get; set; } // To store total inventory count for the pie chart
+        [BindProperty]
+        public List<Dictionary<Guid, string>> LocationMapping { get; set; }
+        [BindProperty]
+        public List<Location> Locations { get; set; }
+        
 
         public async Task OnGetAsync()
         {
@@ -34,6 +41,17 @@ namespace InventoryManagementSystem.Areas.Identity.Pages.Account
             Item = string.Empty;
             Items = new List<string>();
             var inventory = await this._repository.GetAllInventory();
+            var lo = await this._repository.GetAllActiveLocations();
+            Locations = lo;
+            LocationMapping = new();
+            foreach (var l in Locations)
+            {
+                Dictionary<Guid, string> temp = new()
+                {
+                    {l.LocationId, l.LocationName }
+                };
+                LocationMapping.Add(temp);
+             }
             TotalInventoryCount = inventory.InventoryList.Count; // Use the repository method to get the count
             Console.WriteLine($"Total Inventory Count: {TotalInventoryCount}");
         }
