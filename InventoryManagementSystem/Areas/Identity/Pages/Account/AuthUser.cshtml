@@ -40,20 +40,32 @@ var itemsAtLocation =[];
                 }
          }
         function CollectItem() {
-            let items = [];
-            for (let i = 0; i < itemCount; i++) {
-                let currentId = "item_" + i.toString();
-                let itemSpan = document.getElementById(currentId);
-                if (itemSpan) {
-                    items.push(itemSpan.innerHTML);
+            //let items = [];
+            //for (let i = 0; i < itemCount; i++) {
+            //    let currentId = "item_" + i.toString();
+            //    let itemSpan = document.getElementById(currentId);
+            //    if (itemSpan) {
+            //        items.push(itemSpan.innerHTML);
+            //    }
+            //}
+            let CycleHistory = []
+            for (let i = 0; i < itemsAtLocation.length; i++) {
+                let newItem = {
+                    Id: itemsAtLocation[i].inventoryItemId,
+                    ItemSerialNumber : itemsAtLocation[i].itemSerialNumber,
+                    ItemType : itemsAtLocation[i].itemType,
+                    LocationName : itemsAtLocation[i].locationName,
+                    Comment : itemsAtLocation[i].comment,
+                    RelocateInd: itemsAtLocation[i].RelocateInd,
+                    FoundInd: itemsAtLocation[i].foundInd
                 }
+                CycleHistory.push(newItem);
             }
-            let itemStr = items.join('')
             $.ajax({
-            url: "/Home/GetLocation/",
+            url: "/Home/ProcessCycleHistory/",
             method: "POST",
             data: {
-                Items: name
+                CycleHistory: CycleHistory
             },
             success: function(data) {
           

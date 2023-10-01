@@ -3,6 +3,7 @@ using InventoryManagementSystem.Repository.abstraction;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using InventoryManagementSystem.Database.Entities;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -50,6 +51,12 @@ namespace InventoryManagementSystem.Controllers
         {
             var res = _repository.GetAllItemsAtLocation(Location);
             return Ok(res.Result.InventoryList);
+        }
+        public IActionResult ProcessCycleHistory(List<CycleHistory> CycleHistory)
+        {
+            var user = this.User.Identity.Name;
+            var res = _repository.ProcessCycleSession(CycleHistory);
+            return Ok();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

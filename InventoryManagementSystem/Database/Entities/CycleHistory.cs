@@ -8,8 +8,8 @@ namespace InventoryManagementSystem.Database.Entities
         public string ItemSerialNumber { get; set; }
         public string ItemType { get; set; }
         public string LocationName { get; set; }
-        public DateTime CreateDateTime { get; set; }
-        public string Employee { get; set; }
+        public DateTime? CreateDateTime { get; set; }
+        public string? Employee { get; set; }
         public string Comment { get; set; }
         public bool RelocateInd { get; set; }
         public bool FoundInd { get; set; }
