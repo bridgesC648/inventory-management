@@ -5,11 +5,12 @@
     ViewData["Title"] = "Authenticated User";
 }
 <script>
-    function SetItemType() { 
-
+var itemsAtLocation =[];
+    function SetItemType() {
+        //#('#setItemBtn').prop("disabled", true);
         let selecItem = document.getElementById('itemField');
         let name = selecItem.value;
-           $.ajax({
+        $.ajax({
             url: "/Home/GetLocation/",
             method: "POST",
             data: {
@@ -18,16 +19,76 @@
             success: function(data) {
                 $('#locationField').html(data.selectOptions)
                 selecItem.disabled = true;
-                $('#locationField').prop('disabled',false);
-                $('#setLocationBtn').prop('disabled',false);
+                $('#locationField').prop('disabled', false);
+                $('#setLocationBtn').prop('disabled', false);
                 $('#itemType').html(name);
                 console.log(data);
             },
+
+        });
+        
+    }
+        function RemoveItem(itemOb) {
+    
+                // Check if itemOb exists and has a parent node
+                if (itemOb && itemOb.parentNode) {
+                    // Store the parent div in a variable called 'parent'
+                    var parent = itemOb.parentNode;
+                    // Now, you can work with the 'parent' variable as needed
+                    // For example, you can remove 'itemOb' from its parent like this:
+                    parent.remove();
+                }
+         }
+        function CollectItem() {
+            let items = [];
+            for (let i = 0; i < itemCount; i++) {
+                let currentId = "item_" + i.toString();
+                let itemSpan = document.getElementById(currentId);
+                if (itemSpan) {
+                    items.push(itemSpan.innerHTML);
+                }
+            }
+            let itemStr = items.join('')
+            $.ajax({
+            url: "/Home/GetLocation/",
+            method: "POST",
+            data: {
+                Items: name
+            },
+            success: function(data) {
+          
+            },
         
         });
+        }
+function SearchArray() {
+   let serialNum = $('#SerialNumber').val();
+    let scanItem = itemsAtLocation.find(f => f.itemSerialNumber == serialNum.trim());
+    if (scanItem) {
+        scanItem.comment = "Ok";
+        scanItem.scanned = true;
+        $("#itemsContainer").prepend(`<div class="item-card"><span class="delete-icon" onclick="RemoveItem(this)">&#128465;</span><span id="item_${itemCount}"> ${scanItem.itemSerialNumber}</span></div>`);
+        //$("#itemsContainer").prepend(`<div class="item-card"><span class="delete-icon" onclick="RemoveItem(this)">&#128465;</span><span id="item_${itemCount}"> ${scanItem.itemType} - ${scanItem.locationType} - ${scanItem.itemSerialNumber}</span></div>`);
+        itemsCount++;
+    }
 }
+        
+
 function DisableLocation() {
     $('#locationField').prop('disabled',true);
+    let location = $('#locationField').val();
+    $('#setLocationBtn').prop("disabled", true);
+    $.ajax({
+            url: "/Home/GetItems/",
+            method: "POST",
+            data: {
+                Location: location
+            },
+            success: function(data) {
+                     itemsAtLocation = data;
+            },
+        
+        });
 }
   
 </script>
@@ -75,10 +136,14 @@ function DisableLocation() {
             <option value="Carpet">Carpet</option>
             <option value="YARN">Yarn</option>
         </select>
-        <button onclick="SetItemType()">Set</button>
-        <button id="addItemBtn" onclick="SetItemType()">Add</button>
+        <button onclick="SetItemType()" id="setItemBtn">Set</button>
+        <button id="addItemBtn" onclick="">Add</button>
     </div>
-
+    <div clss="row" style="">
+        <label>Serial Number:</label>
+        <input id="SerialNumber" class="form-control" style="width: 200px;"/>
+    </div>
+    <br />
     <div class="display-box" id="itemsContainer">
         <!-- Items will be dynamically added here -->
     </div>
@@ -92,12 +157,16 @@ function DisableLocation() {
 
 @section Scripts {
     <script>
+        var itemCount = 0
         $(document).ready(function () {
             $("#addItemBtn").click(function () {
                 let item = $("#itemField").val();
                 let location = $("#locationField").val();
+                let serial = $("#SerialNumber").val();
                 if (item && location) {
-                    $("#itemsContainer").prepend(`<div class="item-card"><span class="delete-icon">&#128465;</span> ${item} - ${location}</div>`);
+                    //$("#itemsContainer").prepend(`<div class="item-card"><span class="delete-icon" onclick="RemoveItem(this)">&#128465;</span><span id="item_${itemCount}"> ${item} - ${location} - ${serial}</span></div>`);
+                    SearchArray();
+                    //itemCount++;
                 }
             });
 

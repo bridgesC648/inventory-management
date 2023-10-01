@@ -46,6 +46,11 @@ namespace InventoryManagementSystem.Controllers
             }
             return Ok(new {selectOptions });
         }
+        public IActionResult GetItems(string Location)
+        {
+            var res = _repository.GetAllItemsAtLocation(Location);
+            return Ok(res.Result.InventoryList);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
