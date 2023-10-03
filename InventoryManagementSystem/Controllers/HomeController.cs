@@ -55,8 +55,27 @@ namespace InventoryManagementSystem.Controllers
         public IActionResult ProcessCycleHistory(List<CycleHistory> CycleHistory)
         {
             var user = this.User.Identity.Name;
+            foreach(var cycleHistory in CycleHistory)
+            {
+                cycleHistory.Employee = user;
+            }
             var res = _repository.ProcessCycleSession(CycleHistory);
             return Ok();
+        }
+
+        public IActionResult SearchItemBySerialNumber(string serialNum)
+        {
+            var res = _repository.GetItem(serialNum);
+
+            if (res.Result.Success)
+            {
+                return Ok(res.Result.Item);
+            }
+            else
+            {
+                return Ok(res.Result.Success);
+            }
+            
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

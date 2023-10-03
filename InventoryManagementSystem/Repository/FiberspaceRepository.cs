@@ -88,7 +88,11 @@ namespace InventoryManagementSystem.Repository
             try
             {
                 result.Item = _context.InventoryItems.Where(i => i.ItemSerialNumber.Trim() == itemSerialNumber.Trim()).FirstOrDefault();
-                result.Success = true;
+                if (result.Item != null)
+                {
+                    result.Success = true;
+                }
+               
             }
             catch (Exception e)
             {
@@ -131,7 +135,7 @@ namespace InventoryManagementSystem.Repository
             return result;
         }
         //processCycleSession: Takes an array of items in the format of the CycleHistory table, and saves everything from the current session
-        public Task<Response> ProcessCycleSession(List<CycleHistory> CycleItems)
+        public async Task<Response> ProcessCycleSession(List<CycleHistory> CycleItems)
         {
             Response result = new();
             try
@@ -152,13 +156,14 @@ namespace InventoryManagementSystem.Repository
                     _context.Add(insert);
                 }
                 _context.SaveChanges();
+                result.Success = true;
             }
             catch (Exception e)
             {
                 result.Success = false;
                 result.Message = e.Message;
             }
-            throw new NotImplementedException();
+            return result;
         }
 
         public async Task<GetInventoryByIdDto> RelocateItem(InventoryItem item, string newLocationName)

@@ -6,6 +6,7 @@
 }
 <script>
 var itemsAtLocation =[];
+var itemsScanned = [];
     function SetItemType() {
         //#('#setItemBtn').prop("disabled", true);
         let selecItem = document.getElementById('itemField');
@@ -55,11 +56,24 @@ var itemsAtLocation =[];
                     ItemSerialNumber : itemsAtLocation[i].itemSerialNumber,
                     ItemType : itemsAtLocation[i].itemType,
                     LocationName : itemsAtLocation[i].locationName,
-                    Comment : itemsAtLocation[i].comment,
-                    RelocateInd: itemsAtLocation[i].RelocateInd,
-                    FoundInd: itemsAtLocation[i].foundInd
+                    Comment : "Not found",
+                    RelocateInd: false,
+                    FoundInd: false
                 }
                 CycleHistory.push(newItem);
+            }
+            for (let i = 0; i < itemsScanned.length; i++) {
+                    let newItem = {
+                    Id: itemsScanned[i].inventoryItemId,
+                    ItemSerialNumber : itemsScanned[i].itemSerialNumber,
+                    ItemType : itemsScanned[i].itemType,
+                    LocationName : itemsScanned[i].locationName,
+                    Comment : itemsScanned[i].comment,
+                    RelocateInd: itemsScanned[i].RelocateInd,
+                    FoundInd: itemsScanned[i].RelocateInd
+                }
+                CycleHistory.push(newItem);
+              
             }
             $.ajax({
             url: "/Home/ProcessCycleHistory/",
@@ -68,7 +82,7 @@ var itemsAtLocation =[];
                 CycleHistory: CycleHistory
             },
             success: function(data) {
-          
+                $('#itemsContainer').html("");
             },
         
         });
@@ -78,10 +92,41 @@ function SearchArray() {
     let scanItem = itemsAtLocation.find(f => f.itemSerialNumber == serialNum.trim());
     if (scanItem) {
         scanItem.comment = "Ok";
-        scanItem.scanned = true;
-        $("#itemsContainer").prepend(`<div class="item-card"><span class="delete-icon" onclick="RemoveItem(this)">&#128465;</span><span id="item_${itemCount}"> ${scanItem.itemSerialNumber}</span></div>`);
+        scanItem.RelocateInd = false;
+        scanItem.FoundInd = true;
+        itemsScanned.push(scanItem);
+        itemsAtLocation = itemsAtLocation.filter(item => item.itemSerialNumber != scanItem.itemSerialNumber);
+        $("#itemsContainer").prepend(`<div class="item-card"><span class="delete-icon" onclick="RemoveItem(this)">&#128465;</span><span > ${scanItem.itemSerialNumber}</span></div>`);
         //$("#itemsContainer").prepend(`<div class="item-card"><span class="delete-icon" onclick="RemoveItem(this)">&#128465;</span><span id="item_${itemCount}"> ${scanItem.itemType} - ${scanItem.locationType} - ${scanItem.itemSerialNumber}</span></div>`);
-        itemsCount++;
+       
+    }
+    else {
+   //WXYZ01A - test serialnum 18A
+        $.ajax({
+            url: "/Home/SearchItemBySerialNumber/",
+            method: "POST",
+            data: {
+                serialNum: serialNum
+            },
+            success: function(data) {
+               
+                if (data != false) {
+                                    let newItem = {
+                    inventoryItemId: data.inventoryItemId,
+                    itemSerialNumber: serialNum,
+                    itemType: data.itemType,
+                    locationName: $('#locationField').val(),
+                    comment: "Ok, relocated",
+                    RelocateInd: true,
+                    FoundInd: true
+                }
+                    itemsScanned.push(newItem);
+                $("#itemsContainer").prepend(`<div class="item-card"><span class="delete-icon" onclick="RemoveItem(this)">&#128465;</span><span > ${serialNum}</span></div>`);
+                }
+
+            }
+        });
+
     }
 }
         
@@ -161,7 +206,7 @@ function DisableLocation() {
     </div>
 
     <div class="button-section">
-        <button id="processSessionBtn">Process Session</button>
+        <button id="processSessionBtn" onclick="CollectItem()">Process Session</button>
         <button id="resetBtn">Reset</button>
         <button id="exitBtn">Exit</button>
     </div>
