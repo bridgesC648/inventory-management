@@ -88,7 +88,35 @@ var itemsScanned = [];
         });
         }
 function SearchArray() {
-   let serialNum = $('#SerialNumber').val();
+    let serialNum = $('#SerialNumber').val();
+    if (!serialNum) {
+        alert("Serial number cannot be empty!");
+        return;
+    }
+    if (serialNum.length !== 7) {
+        alert("Serial number must be exactly 7 characters!");
+        return;
+    }
+    let duplicateItem = itemsAtLocation.find(f => f.itemSerialNumber === serialNum.trim());
+    if (duplicateItem) {
+        alert("An item with the same serial number has already been added!");
+        $("#SerialNumber").val('');
+        return;
+    }
+    let isDuplicateInContainer = false;
+    $("#itemsContainer .item-card").each(function () {
+        let itemText = $(this).text().trim();
+        if (itemText.includes(serialNum)) {
+            isDuplicateInContainer = true;
+            return false;
+        }
+    });
+    if (isDuplicateInContainer) {
+        alert("An item with the same serial number has already been added!");
+        $("#SerialNumber").val('');
+        return;
+    }
+
     let scanItem = itemsAtLocation.find(f => f.itemSerialNumber == serialNum.trim());
     if (scanItem) {
         scanItem.comment = "Ok";
@@ -272,11 +300,15 @@ function DisableLocation() {
             });
 
             $("#resetBtn").click(function () {
-
+                $("#SerialNumber").val('');
+                $("#itemField").val('');
+                $("#locationField").val('');
+                $('#locationField').prop('disabled', true);
+                $('#setLocationBtn').prop('disabled', true);
+                $('#itemField').prop('disabled', false);
+                $('#setItemBtn').prop('disabled', false);
                 $("#itemsContainer").empty();
             });
-
-            console.log("Total Inventory Count from Model:", @Model.TotalInventoryCount);
 
         });
 
