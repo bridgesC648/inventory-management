@@ -4,7 +4,179 @@
 @{
     ViewData["Title"] = "Authenticated User";
 }
+<script>
+var itemsAtLocation =[];
+var itemsScanned = [];
+    function SetItemType() {
+        //#('#setItemBtn').prop("disabled", true);
+        let selecItem = document.getElementById('itemField');
+        let name = selecItem.value;
+        $.ajax({
+            url: "/Home/GetLocation/",
+            method: "POST",
+            data: {
+                Name: name
+            },
+            success: function(data) {
+                $('#locationField').html(data.selectOptions)
+                selecItem.disabled = true;
+                $('#locationField').prop('disabled', false);
+                $('#setLocationBtn').prop('disabled', false);
+                $('#itemType').html(name);
+                console.log(data);
+            },
 
+        });
+        
+    }
+        function RemoveItem(itemOb) {
+    
+                // Check if itemOb exists and has a parent node
+                if (itemOb && itemOb.parentNode) {
+                    // Store the parent div in a variable called 'parent'
+                    var parent = itemOb.parentNode;
+                    // Now, you can work with the 'parent' variable as needed
+                    // For example, you can remove 'itemOb' from its parent like this:
+                    parent.remove();
+                }
+         }
+        function CollectItem() {
+            //let items = [];
+            //for (let i = 0; i < itemCount; i++) {
+            //    let currentId = "item_" + i.toString();
+            //    let itemSpan = document.getElementById(currentId);
+            //    if (itemSpan) {
+            //        items.push(itemSpan.innerHTML);
+            //    }
+            //}
+            let CycleHistory = []
+            for (let i = 0; i < itemsAtLocation.length; i++) {
+                let newItem = {
+                    Id: itemsAtLocation[i].inventoryItemId,
+                    ItemSerialNumber : itemsAtLocation[i].itemSerialNumber,
+                    ItemType : itemsAtLocation[i].itemType,
+                    LocationName : itemsAtLocation[i].locationName,
+                    Comment : "Not found",
+                    RelocateInd: false,
+                    FoundInd: false
+                }
+                CycleHistory.push(newItem);
+            }
+            for (let i = 0; i < itemsScanned.length; i++) {
+                    let newItem = {
+                    Id: itemsScanned[i].inventoryItemId,
+                    ItemSerialNumber : itemsScanned[i].itemSerialNumber,
+                    ItemType : itemsScanned[i].itemType,
+                    LocationName : itemsScanned[i].locationName,
+                    Comment : itemsScanned[i].comment,
+                    RelocateInd: itemsScanned[i].RelocateInd,
+                    FoundInd: itemsScanned[i].RelocateInd
+                }
+                CycleHistory.push(newItem);
+              
+            }
+            $.ajax({
+            url: "/Home/ProcessCycleHistory/",
+            method: "POST",
+            data: {
+                CycleHistory: CycleHistory
+            },
+            success: function(data) {
+                $('#itemsContainer').html("");
+            },
+        
+        });
+        }
+function SearchArray() {
+    let serialNum = $('#SerialNumber').val();
+    if (!serialNum) {
+        alert("Serial number cannot be empty!");
+        return;
+    }
+    if (serialNum.length !== 7) {
+        alert("Serial number must be exactly 7 characters!");
+        return;
+    }
+    let duplicateItem = itemsAtLocation.find(f => f.itemSerialNumber === serialNum.trim());
+    if (duplicateItem) {
+        alert("An item with the same serial number has already been added!");
+        $("#SerialNumber").val('');
+        return;
+    }
+    let isDuplicateInContainer = false;
+    $("#itemsContainer .item-card").each(function () {
+        let itemText = $(this).text().trim();
+        if (itemText.includes(serialNum)) {
+            isDuplicateInContainer = true;
+            return false;
+        }
+    });
+    if (isDuplicateInContainer) {
+        alert("An item with the same serial number has already been added!");
+        $("#SerialNumber").val('');
+        return;
+    }
+
+    let scanItem = itemsAtLocation.find(f => f.itemSerialNumber == serialNum.trim());
+    if (scanItem) {
+        scanItem.comment = "Ok";
+        scanItem.RelocateInd = false;
+        scanItem.FoundInd = true;
+        itemsScanned.push(scanItem);
+        itemsAtLocation = itemsAtLocation.filter(item => item.itemSerialNumber != scanItem.itemSerialNumber);
+        $("#itemsContainer").prepend(`<div class="item-card"><span class="delete-icon" onclick="RemoveItem(this)">&#128465;</span><span > ${scanItem.itemSerialNumber}</span></div>`);
+        //$("#itemsContainer").prepend(`<div class="item-card"><span class="delete-icon" onclick="RemoveItem(this)">&#128465;</span><span id="item_${itemCount}"> ${scanItem.itemType} - ${scanItem.locationType} - ${scanItem.itemSerialNumber}</span></div>`);
+       
+    }
+    else {
+   //WXYZ01A - test serialnum 18A
+        $.ajax({
+            url: "/Home/SearchItemBySerialNumber/",
+            method: "POST",
+            data: {
+                serialNum: serialNum
+            },
+            success: function(data) {
+               
+                if (data != false) {
+                                    let newItem = {
+                    inventoryItemId: data.inventoryItemId,
+                    itemSerialNumber: serialNum,
+                    itemType: data.itemType,
+                    locationName: $('#locationField').val(),
+                    comment: "Ok, relocated",
+                    RelocateInd: true,
+                    FoundInd: true
+                }
+                    itemsScanned.push(newItem);
+                $("#itemsContainer").prepend(`<div class="item-card"><span class="delete-icon" onclick="RemoveItem(this)">&#128465;</span><span > ${serialNum}</span></div>`);
+                }
+
+            }
+        });
+
+    }
+}
+        
+
+function DisableLocation() {
+    $('#locationField').prop('disabled',true);
+    let location = $('#locationField').val();
+    $('#setLocationBtn').prop("disabled", true);
+    $.ajax({
+            url: "/Home/GetItems/",
+            method: "POST",
+            data: {
+                Location: location
+            },
+            success: function(data) {
+                     itemsAtLocation = data;
+            },
+        
+        });
+}
+  
+</script>
 <div class="dashboard">
     <center><h2>Dashboard</h2></center>
     <div class="charts-container">
@@ -35,38 +207,53 @@
         </div>
         <div class="itemtype-display">
             <label>Item Type:</label>
-            <span class="display-field">@Model.Item</span>
+            <span class="display-field" id="itemType">@Model.Item</span>
         </div>
     </div>
 
     <div class="input-section">
-        <input type="text" id="locationField" placeholder="Enter a Location" />
-        <button id="setLocationBtn" disabled>SET</button>
+        <select style="width: 100px;" type="text" id="locationField" class="form-control" placeholder="Enter a Location" disabled>
+                
+            </select>
+        <button id="setLocationBtn" onclick="DisableLocation()" disabled>SET</button>
 
-        <input type="text" id="itemField" placeholder="Scan an Item" />
-        <button id="addItemBtn">ADD</button>
+        <select type="text" id="itemField" class="form-control" style="width: 100px;" placeholder="Scan an Item">
+            <option value="Carpet">Carpet</option>
+            <option value="YARN">Yarn</option>
+        </select>
+        <button onclick="SetItemType()" id="setItemBtn">Set</button>
+        <button id="addItemBtn" onclick="">Add</button>
     </div>
-
+    <div clss="row" style="">
+        <label>Serial Number:</label>
+        <input id="SerialNumber" class="form-control" style="width: 200px;"/>
+    </div>
+    <br />
     <div class="display-box" id="itemsContainer">
         <!-- Items will be dynamically added here -->
     </div>
 
     <div class="button-section">
-        <button id="processSessionBtn">Process Session</button>
+        <button id="processSessionBtn" onclick="CollectItem()">Process Session</button>
         <button id="resetBtn">Reset</button>
-        <button id="exitBtn">Exit</button>
+        <!--<button id="exitBtn">Exit</button> -->
     </div>
 </div>
 
 @section Scripts {
     <script>
+        var itemCount = 0
         $(document).ready(function () {
             $("#addItemBtn").click(function () {
                 let item = $("#itemField").val();
                 let location = $("#locationField").val();
+                let serial = $("#SerialNumber").val();
                 if (item && location) {
-                    $("#itemsContainer").prepend(`<div class="item-card"><span class="delete-icon">&#128465;</span> ${item} - ${location}</div>`);
+                    //$("#itemsContainer").prepend(`<div class="item-card"><span class="delete-icon" onclick="RemoveItem(this)">&#128465;</span><span id="item_${itemCount}"> ${item} - ${location} - ${serial}</span></div>`);
+                    SearchArray();
+                    //itemCount++;
                 }
+                $('#SerialNumber').val('');
             });
 
             $("#itemsContainer").on("click", ".item-card", function (e) {
@@ -113,11 +300,17 @@
             });
 
             $("#resetBtn").click(function () {
-
+                $("#SerialNumber").val('');
+                $("#itemField").val('');
+                $("#locationField").val('');
+                $('#locationField').prop('disabled', true);
+                $('#setLocationBtn').prop('disabled', true);
+                $('#itemField').prop('disabled', false);
+                $('#setItemBtn').prop('disabled', false);
                 $("#itemsContainer").empty();
             });
 
-            console.log("Total Inventory Count from Model:", @Model.TotalInventoryCount);
+        });
 
-        });</script>
+        </script>
 }

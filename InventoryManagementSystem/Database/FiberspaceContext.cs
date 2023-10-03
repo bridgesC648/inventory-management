@@ -22,6 +22,7 @@ public partial class FiberspaceContext : IdentityDbContext<IdentityUser>
 
     public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<Location> Locations { get; set; }
+    public virtual DbSet<CycleHistory> CycleHistories { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -30,7 +31,18 @@ public partial class FiberspaceContext : IdentityDbContext<IdentityUser>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<CycleHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__CycleHis__4162D133E26074B3");
+            entity.ToTable("CycleHistory");
+            entity.Property(e => e.Id)
+                .HasColumnName("CycleHistoryId")
+                .ValueGeneratedOnAdd();
 
+
+
+
+        });
         modelBuilder.Entity<InventoryItem>(entity =>
         {
             entity.HasKey(e => e.InventoryItemId).HasName("PK__Inventor__3BB2AC80BFD08667");

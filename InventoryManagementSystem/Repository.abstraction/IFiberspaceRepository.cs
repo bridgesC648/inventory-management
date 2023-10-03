@@ -10,7 +10,15 @@ namespace InventoryManagementSystem.Repository.abstraction
         Task<GetAllInventoryDto> SearchInventoryItem(InventoryItem item);
         Task<GetUserDto> GetUser(int id);
         Task<GetUserDto> GetUserByUsernameOrEmail(string usernameOrEmail);
+        Task<Location> GetLocation(string locationName);
+        Task<GetInventoryByIdDto> GetItem(string itemSerialNumber);
+        Task<GetInventoryByIdDto> RelocateItem(InventoryItem item, string newLocationName);
+        Task<GetInventoryByIdDto> UpdateItemStatusCode(InventoryItem item, string newStatusCode);
+        Task<Response> ProcessCycleSession(List<CycleHistory> CycleItems);
+        Task<GetAllInventoryDto> GetAllItemsAtLocation(string LocationName);
+        Task<List<Location>> GetAllActiveLocations();
 
+       
 
     }
 }
