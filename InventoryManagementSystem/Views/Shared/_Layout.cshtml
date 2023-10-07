@@ -1,5 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 @using Microsoft.AspNetCore.Identity
 
@@ -28,24 +30,11 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav me-auto">
-                        @if (!string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Session.GetString("Username")))
+                        @if (SignInManager.IsSignedIn(User))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="Index">Search</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="Index">Cycle History</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Profile</a>
-                            </li>
-
-                        }
-                        else
-                        {
-                         @*   <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="UserLogin">Home</a>
-                            </li>*@
-                         @*   <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>*@
                         }
                     </ul>
                     <partial name="_LoginPartial" />

@@ -163,7 +163,7 @@ function DisableLocation() {
     <div class="button-section">
         <button id="processSessionBtn">Process Session</button>
         <button id="resetBtn">Reset</button>
-        <button id="exitBtn">Exit</button>
+        
     </div>
 </div>
 
@@ -180,6 +180,7 @@ function DisableLocation() {
                     SearchArray();
                     //itemCount++;
                 }
+                $('#SerialNumber').val('');
             });
 
             $("#itemsContainer").on("click", ".item-card", function (e) {
