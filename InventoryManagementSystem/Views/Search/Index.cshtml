@@ -57,7 +57,7 @@
 
     // Function to trigger CSV download
     function downloadCSV(csv, filename) {
-        alert("This is a download alert message!");
+        
 
         var csvBlob = new Blob([csv], { type: 'text/csv' });
         var url = window.URL.createObjectURL(csvBlob);
@@ -100,7 +100,7 @@
 
                 // Event listener for export button click
                 document.getElementById('exportBtn').addEventListener('click', function () {
-                    alert("This is an alert message!");
+                    
 
                     var table = document.querySelector('table');
                     var csv = convertToCSV(table);
