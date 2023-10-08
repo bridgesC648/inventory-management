@@ -11,15 +11,23 @@
 <div class="container mt-5">
     <div class="card">
         <div class="card-body">
-            <div class="form-group">
-                <label for="Type" class="form-label">Type</label>
-                <input id="Type" class="form-control" />
+            <div class=" form-group">
+            <label for="itemField">Select item type</label>
+            <select type="text" id="itemField" class="form-control" style="width: 100px;" placeholder="Scan an Item">
+                <option value="Carpet">Carpet</option>
+                <option value="YARN">Yarn</option>
+            </select>
+            <button onclick="SetItemType()" id="setItemBtn" class="btn btn-primary">Set</button>
             </div>
-            <div class="form-group">
-                <label for="Location" class="form-label">Location</label>
-                <input id="Location" class="form-control" />
+            
+            <div class="input-section mt-3">
+                <div class="form-group">
+                <label for="locationField">Select location</label>
+                <select style="width: 100px;" type="text" id="locationField" class="form-control" placeholder="Enter a Location" disabled>
+                </select>
+                </div>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-3">
                 <label class="form-label">Start Date</label>
                 <input id="StartDate" type="date" class="form-control" />
             </div>
@@ -33,12 +41,36 @@
             <!-- Table content will be dynamically loaded here -->
         </div>
     </div>
+    </div>
 
+    
+</div>
     <div class="mt-3">
         <button id="exportBtn" class="btn btn-success">Export to CSV</button>
     </div>
-</div>
 <script>
+    function SetItemType() {
+        //#('#setItemBtn').prop("disabled", true);
+        let selecItem = document.getElementById('itemField');
+        let name = selecItem.value;
+        $.ajax({
+            url: "/Home/GetLocation/",
+            method: "POST",
+            data: {
+                Name: name
+            },
+            success: function (data) {
+                $('#locationField').html(data.selectOptions)
+               // selecItem.disabled = true;
+                $('#locationField').prop('disabled', false);
+                $('#setLocationBtn').prop('disabled', false);
+                $('#itemType').html(name);
+                console.log(data);
+            },
+
+        });
+
+    }
     function convertToCSV(table) {
       
 
@@ -79,8 +111,8 @@
         
         $("#getDataBtn").click(function () {
             console.log('Button clicked!');
-                let typeValue = $("#Type").val();
-            let locationValue = $("#Location").val();
+                let typeValue = $("#itemField").val();
+            let locationValue = $("#locationField").val();
                 let startDateValue = $("#StartDate").val(); // Get start date and time
                 let endDateValue = $("#EndDate").val(); // Get end date and time
 
