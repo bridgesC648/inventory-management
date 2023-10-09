@@ -4,30 +4,31 @@ using InventoryManagementSystem.Repository.abstraction;
 using InventoryManagementSystem.Database.Entities;
 using System.Net.NetworkInformation;
 using Microsoft.AspNetCore.Authorization;
+using InventoryManagementSystem.Database;
+using SQLitePCL;
 
 namespace InventoryManagementSystem.Controllers
 {
     // [Authorize]
     public class SearchController : Controller
     {
-        private readonly IFiberspaceRepository _repository;
-        public SearchController(IFiberspaceRepository repo)
+        private readonly FiberspaceContext _context;
+        public SearchController(FiberspaceContext context)
         {
-            this._repository = repo;
+            _context = context;
         }
-        public IActionResult Index()
+        public ActionResult Index()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult Index(SearchModel post)
+        public ActionResult ShowHistory( string Location, string ItemType, DateTime? StartDate, DateTime? EndDate)
         {
-           /* InventoryItem item = new()
-            {
-                ItemType = post.Type
-            };
-            _repository.SearchInventoryItem()*/
-            return Index();
+            var history = _context.CycleHistories.Where(ch => ch.ItemType == ItemType && ch.LocationName == Location &&
+                         ch.CreateDateTime >= StartDate && ch.CreateDateTime <= EndDate)
+                    .ToList();
+            return PartialView("_CycleHistoryPartial", history);
+            
         }
     }
 }
