@@ -1,0 +1,71 @@
+﻿@model List<InventoryManagementSystem.Database.Entities.CycleHistory>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+@if (Model != null && Model.Any())
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Location Name</th>
+                <th>Item Type</th>
+                <th>ItemSerialNumber</th>
+                <th>CreateDateTime</th>
+                <th>Employee</th>
+                <th>Comment</th>
+                <th>RelocateInd</th>
+                <th>FoundInd</th>
+                
+                
+                <!-- Add other table headers for additional properties -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cycleHistory in Model)
+            {
+                <tr>
+                    <td>@cycleHistory.LocationName</td>
+                    <td>@cycleHistory.ItemType</td>
+                    <td>@cycleHistory.ItemSerialNumber</td>
+                    <td>@cycleHistory.CreateDateTime</td>
+                    <td>@cycleHistory.Employee</td>
+                    <td>@cycleHistory.Comment</td>
+                    <td>@cycleHistory.RelocateInd</td>
+                    <td>@cycleHistory.FoundInd</td>
+                    
+
+                    
+                    
+
+                    <!-- Add other table cells for additional properties -->
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    
+}
+else
+{
+    <p>No cycle history data available.</p>
+}
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
