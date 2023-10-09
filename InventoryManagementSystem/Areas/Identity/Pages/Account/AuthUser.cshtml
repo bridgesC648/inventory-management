@@ -321,6 +321,9 @@ function DisableLocation() {
                 $('#itemField').prop('disabled', false);
                 $('#setItemBtn').prop('disabled', false);
                 $("#itemsContainer").empty();
+                itemsAtLocation = [];  // Clear the itemsAtLocation array
+                itemsScanned = [];     // Clear the itemsScanned array
+                itemCount = 0;         // Reset the itemCount
             });
 
         });

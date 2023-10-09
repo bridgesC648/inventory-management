@@ -183,7 +183,6 @@ namespace InventoryManagementSystem.Repository
             try
             {
                 DateTime today = DateTime.Today;
-
                 return await _context.CycleHistories.CountAsync(ch =>
                     ch.CreateDateTime.HasValue && ch.CreateDateTime.Value.Date == today);
             }
