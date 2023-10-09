@@ -1,4 +1,6 @@
 ﻿@using InventoryManagementSystem.Models.Search
+
+
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -6,29 +8,150 @@
 }
 
 
- <div class="card">
+<div class="container mt-5">
+    <div class="card">
         <div class="card-body">
-            <div class="form-group">
-                <label class="form-label">Type</label>
-                <input id="Type" class="form-control" />
+            <div class=" form-group">
+            <label for="itemField">Select item type</label>
+            <select type="text" id="itemField" class="form-control" style="width: 100px;" placeholder="Scan an Item">
+                <option value="Carpet">Carpet</option>
+                <option value="YARN">Yarn</option>
+            </select>
+            <button onclick="SetItemType()" id="setItemBtn" class="btn btn-primary">Set</button>
+            </div>
+            
+            <div class="input-section mt-3">
+                <div class="form-group">
+                <label for="locationField">Select location</label>
+                <select style="width: 100px;" type="text" id="locationField" class="form-control" placeholder="Enter a Location" disabled>
+                </select>
+                </div>
+            </div>
+            <div class="form-group mt-3">
+                <label class="form-label">Start Date</label>
+                <input id="StartDate" type="date" class="form-control" />
             </div>
             <div class="form-group">
-                <label class="form-label">Serial Number</label>
-                <input id="SerialNumber" class="form-control" />
+                <label class="form-label">End Date</label>
+                <input id="EndDate" type="date" class="form-control" />
             </div>
-            <div class="form-group">
-                <label class="form-label">Description</label>
-                <input id="Description" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label class="form-label">Location</label>
-                <input id="Location" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label class="form-label">Status Code</label>
-                <input id="StatusCode" class="form-control" />
-            </div>
+            <button id="getDataBtn" class="btn btn-primary">Get Data</button>
+        </div>
+        <div id="cycleHistoryContainer" class="mt-3">
+            <!-- Table content will be dynamically loaded here -->
         </div>
     </div>
+</div>
+
+    
+
+<div class="container mt-5">
+
+        <div class="text-center mt-3">
+            <button id="exportBtn" class="btn btn-success">Export to CSV</button>
+        </div>
+</div>
+<script>
+    function SetItemType() {
+        //#('#setItemBtn').prop("disabled", true);
+        let selecItem = document.getElementById('itemField');
+        let name = selecItem.value;
+        $.ajax({
+            url: "/Home/GetLocation/",
+            method: "POST",
+            data: {
+                Name: name
+            },
+            success: function (data) {
+                $('#locationField').html(data.selectOptions)
+               // selecItem.disabled = true;
+                $('#locationField').prop('disabled', false);
+                $('#setLocationBtn').prop('disabled', false);
+                $('#itemType').html(name);
+                console.log(data);
+            },
+
+        });
+
+    }
+    function convertToCSV(table) {
+      
+
+        var csv = [];
+        var rows = table.querySelectorAll('tr');
+        for (var i = 0; i < rows.length; i++) {
+
+            var row = [], cols = rows[i].querySelectorAll('td, th');
+            for (var j = 0; j < cols.length; j++) {
+                row.push(cols[j].innerText);
+            }
+            csv.push(row.join(','));
+        }
+        return csv.join('\n');
+    }
+
+    // Function to trigger CSV download
+    function downloadCSV(csv, filename) {
+        
+
+        var csvBlob = new Blob([csv], { type: 'text/csv' });
+        var url = window.URL.createObjectURL(csvBlob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
+</script>
 
 
+
+
+
+@section Scripts {
+<script>
+    $(document).ready(function () {
+        
+        $("#getDataBtn").click(function () {
+            console.log('Button clicked!');
+                let typeValue = $("#itemField").val();
+            let locationValue = $("#locationField").val();
+                let startDateValue = $("#StartDate").val(); // Get start date and time
+                let endDateValue = $("#EndDate").val(); // Get end date and time
+
+            $.ajax({
+                url: "/Search/ShowHistory",
+                type: "POST",
+                data: {
+                    ItemType : typeValue,
+                    Location : locationValue,
+                    StartDate: startDateValue, // Include start date and time
+                    EndDate: endDateValue // Include end date and time
+                },
+                success: function (partialView) {
+                    $("#cycleHistoryContainer").html(partialView);
+                }
+            });
+
+                // Event listener for export button click
+                document.getElementById('exportBtn').addEventListener('click', function () {
+                    
+
+                    var table = document.querySelector('table');
+                    var csv = convertToCSV(table);
+                    downloadCSV(csv, 'data.csv');
+                });
+            // Get values from inputs
+            //let typeValue = $("#Type").val();
+            //let locationValue = $("#Location").val();
+
+            // Do something with the values (for example, log them)
+           // console.log("Type: " + typeValue);
+           // console.log("Location: " + locationValue);
+
+            // You can perform further actions with the values here
+        });
+    });
+</script>
+
+}
