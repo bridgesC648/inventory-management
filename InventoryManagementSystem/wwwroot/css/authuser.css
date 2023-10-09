@@ -205,6 +205,18 @@ h1 {
     animation: slideIn 0.5s forwards 0.5s;
 }
 
+.card-title-location-name {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.card-number-location-count {
+    font-size: 1.5em;
+    opacity: 0;
+    transform: translateY(50px);
+    animation: slideIn 0.5s forwards 0.5s;
+}
+
 @keyframes slideIn {
     to {
         opacity: 1;

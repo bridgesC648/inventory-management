@@ -17,8 +17,7 @@ namespace InventoryManagementSystem.Repository.abstraction
         Task<Response> ProcessCycleSession(List<CycleHistory> CycleItems);
         Task<GetAllInventoryDto> GetAllItemsAtLocation(string LocationName);
         Task<List<Location>> GetAllActiveLocations();
-
-       
-
+        Task<int> GetItemCountAtLocation(string locationName);
+        Task<int> GetUpdatedTodayCount();
     }
 }
