@@ -9,7 +9,7 @@ using SQLitePCL;
 
 namespace InventoryManagementSystem.Controllers
 {
-    [Authorize]
+     [Authorize]
     public class SearchController : Controller
     {
         private readonly FiberspaceContext _context;
