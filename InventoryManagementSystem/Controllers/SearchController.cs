@@ -27,7 +27,18 @@ namespace InventoryManagementSystem.Controllers
             var history = _context.CycleHistories.Where(ch => ch.ItemType == ItemType && ch.LocationName == Location &&
                          ch.CreateDateTime >= StartDate && ch.CreateDateTime <= EndDate)
                     .ToList();
-            return PartialView("_CycleHistoryPartial", history);
+            List<CycleHistory> temp = new();
+            foreach(var item in history)
+            {
+                if(item.Comment.Contains(','))
+                {
+                    item.Comment.Replace(',', ':');
+                }
+                temp.Add(item);
+
+            }
+
+            return PartialView("_CycleHistoryPartial", temp);
             
         }
     }

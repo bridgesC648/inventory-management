@@ -56,7 +56,7 @@ var itemsScanned = [];
                     ItemSerialNumber : itemsAtLocation[i].itemSerialNumber,
                     ItemType : itemsAtLocation[i].itemType,
                     LocationName : itemsAtLocation[i].locationName,
-                    Comment : "Not found",
+                    Comment : "Not Scanned",
                     RelocateInd: false,
                     FoundInd: false
                 }
@@ -97,7 +97,7 @@ function SearchArray() {
         alert("Serial number must be exactly 7 characters!");
         return;
     }
-    let duplicateItem = itemsAtLocation.find(f => f.itemSerialNumber === serialNum.trim());
+    let duplicateItem = itemsScanned.find(f => f.itemSerialNumber === serialNum.trim());
     if (duplicateItem) {
         alert("An item with the same serial number has already been added!");
         $("#SerialNumber").val('');
@@ -144,7 +144,7 @@ function SearchArray() {
                     itemSerialNumber: serialNum,
                     itemType: data.itemType,
                     locationName: $('#locationField').val(),
-                    comment: "Ok, relocated",
+                    comment: "Ok: relocated",
                     RelocateInd: true,
                     FoundInd: true
                 }
