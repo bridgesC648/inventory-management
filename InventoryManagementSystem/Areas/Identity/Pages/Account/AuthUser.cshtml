@@ -56,7 +56,7 @@ var itemsScanned = [];
                     ItemSerialNumber : itemsAtLocation[i].itemSerialNumber,
                     ItemType : itemsAtLocation[i].itemType,
                     LocationName : itemsAtLocation[i].locationName,
-                    Comment : "Not found",
+                    Comment : "Not Scanned",
                     RelocateInd: false,
                     FoundInd: false
                 }
@@ -97,7 +97,7 @@ function SearchArray() {
         alert("Serial number must be exactly 7 characters!");
         return;
     }
-    let duplicateItem = itemsAtLocation.find(f => f.itemSerialNumber === serialNum.trim());
+    let duplicateItem = itemsScanned.find(f => f.itemSerialNumber === serialNum.trim());
     if (duplicateItem) {
         alert("An item with the same serial number has already been added!");
         $("#SerialNumber").val('');
@@ -144,7 +144,7 @@ function SearchArray() {
                     itemSerialNumber: serialNum,
                     itemType: data.itemType,
                     locationName: $('#locationField').val(),
-                    comment: "Ok, relocated",
+                    comment: "Ok: relocated",
                     RelocateInd: true,
                     FoundInd: true
                 }
@@ -185,12 +185,12 @@ function DisableLocation() {
             <div class="card-number">@Model.TotalInventoryCount</div>
         </div>
         <div class="card">
-            <div class="card-title">Location A</div>
-            <div class="card-number">56</div> <!-- Replace with actual number -->
+            <div class="card-title-location-name">Floor</div>
+            <div class="card-number-location-count">6</div>
         </div>
         <div class="card">
             <div class="card-title">Updated Today</div>
-            <div class="card-number">34</div> <!-- Replace with actual number -->
+            <div class="card-number">@Model.UpdatedTodayCount</div>
         </div>
     </div>
 </div>
@@ -256,6 +256,19 @@ function DisableLocation() {
                 $('#SerialNumber').val('');
             });
 
+            let locationCounts = @Json.Serialize(Model.LocationItemCounts);
+            let locationNames = Object.keys(locationCounts);
+            let currentIndex = 0;
+
+            function updateLocationDisplay() {
+                let locationName = locationNames[currentIndex];
+                let itemCount = locationCounts[locationName];
+                document.querySelector('.card-title-location-name').textContent = locationName;
+                document.querySelector('.card-number-location-count').textContent = itemCount;
+                currentIndex = (currentIndex + 1) % locationNames.length;
+            }
+            setInterval(updateLocationDisplay, 3000);
+
             $("#itemsContainer").on("click", ".item-card", function (e) {
                 if ($(e.target).hasClass("delete-icon")) {
                     $(this).remove();
@@ -308,9 +321,12 @@ function DisableLocation() {
                 $('#itemField').prop('disabled', false);
                 $('#setItemBtn').prop('disabled', false);
                 $("#itemsContainer").empty();
+                itemsAtLocation = [];  // Clear the itemsAtLocation array
+                itemsScanned = [];     // Clear the itemsScanned array
+                itemCount = 0;         // Reset the itemCount
             });
 
         });
 
-        </script>
+    </script>
 }

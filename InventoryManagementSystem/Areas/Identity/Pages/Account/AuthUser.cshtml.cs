@@ -33,10 +33,15 @@ namespace InventoryManagementSystem.Areas.Identity.Pages.Account
         public List<Dictionary<Guid, string>> LocationMapping { get; set; }
         [BindProperty]
         public List<Location> Locations { get; set; }
-        
+        public Dictionary<string, int> LocationItemCounts { get; set; } = new Dictionary<string, int>();
+        public int UpdatedTodayCount { get; set; }
+
+
+
 
         public async Task OnGetAsync()
         {
+            UpdatedTodayCount = await _repository.GetUpdatedTodayCount();
             Location = string.Empty;
             Item = string.Empty;
             Items = new List<string>();
@@ -53,7 +58,11 @@ namespace InventoryManagementSystem.Areas.Identity.Pages.Account
                 LocationMapping.Add(temp);
              }
             TotalInventoryCount = inventory.InventoryList.Count; // Use the repository method to get the count
-            Console.WriteLine($"Total Inventory Count: {TotalInventoryCount}");
+            foreach (var location in Locations)
+            {
+                var locationItemCount = await _repository.GetItemCountAtLocation(location.LocationName);
+                LocationItemCounts[location.LocationName] = locationItemCount;
+            }
         }
 
         public IActionResult OnPostSetLocation()

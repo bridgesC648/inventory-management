@@ -114,6 +114,18 @@ namespace InventoryManagementSystem.Repository
             return result;
         }
 
+        public async Task<int> GetItemCountAtLocation(string locationName)
+        {
+            try
+            {
+                return await _context.InventoryItems.CountAsync(i => i.LocationName == locationName);
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
+        }
+
         public async Task<GetUserDto> GetUser(int id)
         {
             throw new NotImplementedException();
@@ -165,6 +177,22 @@ namespace InventoryManagementSystem.Repository
             }
             return result;
         }
+
+        public async Task<int> GetUpdatedTodayCount()
+        {
+            try
+            {
+                DateTime today = DateTime.Today;
+                return await _context.CycleHistories.CountAsync(ch =>
+                    ch.CreateDateTime.HasValue && ch.CreateDateTime.Value.Date == today);
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
+        }
+
+
 
         public async Task<GetInventoryByIdDto> RelocateItem(InventoryItem item, string newLocationName)
         {
